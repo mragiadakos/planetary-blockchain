@@ -1,0 +1,22 @@
+package: .
+import:
+- package: github.com/tendermint/abci
+  version: v0.11.0-rc0
+  subpackages:
+  - types
+- package: github.com/tendermint/go-crypto
+  version: v0.6.2
+- package: github.com/btcsuite/btcd
+  subpackages:
+  - btcec
+- package: github.com/ipfs/go-ipfs-api
+  version: v1.2.1
+- package: github.com/ipfs/go-ipfs-cmdkit
+- package: github.com/syndtr/goleveldb
+  subpackages:
+  - leveldb
+testImport:
+- package: github.com/stretchr/testify
+  version: v1.2.1
+  subpackages:
+  - assert

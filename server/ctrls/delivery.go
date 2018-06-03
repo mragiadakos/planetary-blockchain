@@ -11,7 +11,7 @@ import (
 	"github.com/tendermint/abci/types"
 )
 
-func (pba *PBApplication) addActionValidation(dr DeliveryResponse) (uint32, error) {
+func (pba *PBApplication) addActionValidation(dr DeliveryRequest) (uint32, error) {
 	if conf.Conf.Blockchain == conf.OtoOPB {
 		if len(dr.Data.Files) > 1 {
 			return CodeTypeUnauthorized,
@@ -34,7 +34,7 @@ func (pba *PBApplication) addActionValidation(dr DeliveryResponse) (uint32, erro
 	return CodeTypeOK, nil
 }
 
-func (pba *PBApplication) sendActionValidation(dr DeliveryResponse) (uint32, error) {
+func (pba *PBApplication) sendActionValidation(dr DeliveryRequest) (uint32, error) {
 	if dr.Data.To == nil {
 		return CodeTypeUnauthorized, errors.New("The public key of the receiver does not exists.")
 	}
@@ -70,7 +70,7 @@ func (pba *PBApplication) sendActionValidation(dr DeliveryResponse) (uint32, err
 	return CodeTypeOK, nil
 }
 
-func (pba *PBApplication) removeActionValidation(dr DeliveryResponse) (uint32, error) {
+func (pba *PBApplication) removeActionValidation(dr DeliveryRequest) (uint32, error) {
 	fromAddr, _ := dr.FromPubKeyAddress()
 	for _, v := range dr.Data.Files {
 		addr := pba.state.db.Get(prefixFileKey(v))
@@ -84,7 +84,7 @@ func (pba *PBApplication) removeActionValidation(dr DeliveryResponse) (uint32, e
 	return CodeTypeOK, nil
 }
 
-func (pba *PBApplication) deliverTxValidator(dr DeliveryResponse) (uint32, error) {
+func (pba *PBApplication) deliverTxValidator(dr DeliveryRequest) (uint32, error) {
 	pubk, err := crypto.PubKeyFromBytes(dr.Data.From)
 	if err != nil {
 		return CodeTypeEncodingError, errors.New("Public key is not correct.")
@@ -130,7 +130,7 @@ func (pba *PBApplication) deliverTxValidator(dr DeliveryResponse) (uint32, error
 	return CodeTypeOK, nil
 }
 
-func (pba *PBApplication) addActionState(dr DeliveryResponse) {
+func (pba *PBApplication) addActionState(dr DeliveryRequest) {
 	fromAddr, _ := dr.FromPubKeyAddress()
 	pba.addFilesToUserKey(fromAddr, dr.Data.Files)
 	for _, v := range dr.Data.Files {
@@ -168,7 +168,7 @@ func (pba *PBApplication) removeFilesFromUserKey(fromAddr string, delFiles []str
 	}
 }
 
-func (pba *PBApplication) removeActionState(dr DeliveryResponse) {
+func (pba *PBApplication) removeActionState(dr DeliveryRequest) {
 	fromAddr, _ := dr.FromPubKeyAddress()
 	pba.removeFilesFromUserKey(fromAddr, dr.Data.Files)
 	for _, v := range dr.Data.Files {
@@ -176,7 +176,7 @@ func (pba *PBApplication) removeActionState(dr DeliveryResponse) {
 	}
 }
 
-func (pba *PBApplication) sendActionState(dr DeliveryResponse) {
+func (pba *PBApplication) sendActionState(dr DeliveryRequest) {
 	toAddr, _ := dr.ToPubKeyAddress()
 	fromAddr, _ := dr.FromPubKeyAddress()
 	pba.removeFilesFromUserKey(fromAddr, dr.Data.Files)
@@ -192,7 +192,7 @@ func (pba *PBApplication) sendActionState(dr DeliveryResponse) {
 }
 
 func (pba *PBApplication) DeliverTx(tx []byte) types.ResponseDeliverTx {
-	dr := DeliveryResponse{}
+	dr := DeliveryRequest{}
 	err := json.Unmarshal(tx, &dr)
 	if err != nil {
 		return types.ResponseDeliverTx{Code: CodeTypeEncodingError, Log: "The response is not correct."}

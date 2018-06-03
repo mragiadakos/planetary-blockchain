@@ -29,12 +29,12 @@ type DeliveryData struct {
 	Files  []string
 }
 
-type DeliveryResponse struct {
+type DeliveryRequest struct {
 	Signature []byte //hex
 	Data      DeliveryData
 }
 
-func (dr *DeliveryResponse) FromPubKeyAddress() (string, error) {
+func (dr *DeliveryRequest) FromPubKeyAddress() (string, error) {
 	pubkey, err := crypto.PubKeyFromBytes(dr.Data.From)
 	if err != nil {
 		return "", err
@@ -42,7 +42,7 @@ func (dr *DeliveryResponse) FromPubKeyAddress() (string, error) {
 	return pubkey.Address().String(), nil
 }
 
-func (dr *DeliveryResponse) ToPubKeyAddress() (string, error) {
+func (dr *DeliveryRequest) ToPubKeyAddress() (string, error) {
 	if dr.Data.To == nil {
 		return "", errors.New("The public key of the receiver is empty.")
 	}

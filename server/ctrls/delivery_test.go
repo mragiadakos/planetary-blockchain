@@ -15,7 +15,7 @@ import (
 
 type forTestUtils struct{}
 
-func (f forTestUtils) createAddOrRemoveDelivery(t *testing.T, from crypto.PrivKeyEd25519, action ActionStruct, input [][]byte) DeliveryResponse {
+func (f forTestUtils) createAddOrRemoveDelivery(t *testing.T, from crypto.PrivKeyEd25519, action ActionStruct, input [][]byte) DeliveryRequest {
 	dd := DeliveryData{}
 	if action != ADD_ACTION && action != REMOVE_ACTION {
 		assert.Error(t, errors.New("use the method for add or remove"))
@@ -31,14 +31,14 @@ func (f forTestUtils) createAddOrRemoveDelivery(t *testing.T, from crypto.PrivKe
 	}
 	dd.From = from.PubKey().Bytes()
 	b, _ := json.Marshal(dd)
-	dr := DeliveryResponse{}
+	dr := DeliveryRequest{}
 	dr.Signature = from.Sign(b).Bytes()
 	dr.Data = dd
 	return dr
 }
 
 func (f forTestUtils) createSendDelivery(t *testing.T, from crypto.PrivKeyEd25519, to *crypto.PrivKeyEd25519,
-	action ActionStruct, files []string) DeliveryResponse {
+	action ActionStruct, files []string) DeliveryRequest {
 	dd := DeliveryData{}
 	if action != SEND_ACTION {
 		assert.Error(t, errors.New("use the method for send only"))
@@ -51,7 +51,7 @@ func (f forTestUtils) createSendDelivery(t *testing.T, from crypto.PrivKeyEd2551
 		dd.To = &toB
 	}
 	b, _ := json.Marshal(dd)
-	dr := DeliveryResponse{}
+	dr := DeliveryRequest{}
 	dr.Signature = from.Sign(b).Bytes()
 	dr.Data = dd
 	return dr

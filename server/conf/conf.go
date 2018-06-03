@@ -20,6 +20,7 @@ type configuration struct {
 	WaitingSecondsQuery         int
 	AuthorizedAddressesIpfsHash string
 	authorizedAddresses         map[string]string
+	AbciDaemon                  string
 }
 
 func (c *configuration) GetAuthorizedAddresses() map[string]string {
@@ -50,6 +51,7 @@ var Conf = configuration{}
 
 func init() {
 	Conf.IpfsConnection = "127.0.0.1:5001"
+	Conf.AbciDaemon = "tcp://0.0.0.0:46658"
 	Conf.Blockchain = SPB
 	Conf.WaitingSecondsQuery = 5
 	Conf.authorizedAddresses = map[string]string{}

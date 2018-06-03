@@ -1,0 +1,205 @@
+hash: a39d7f7957632d89182c987932d8379b6d9918810864f4d025e59ea85492402d
+updated: 2018-06-03T14:34:22.182044099+03:00
+imports:
+- name: github.com/agl/ed25519
+  version: 5312a61534124124185d41f09206b9fef1d88403
+  subpackages:
+  - edwards25519
+  - extra25519
+- name: github.com/btcsuite/btcd
+  version: 86fed781132ac890ee03e906e4ecd5d6fa180c64
+  subpackages:
+  - btcec
+- name: github.com/davecgh/go-spew
+  version: 346938d642f2ec3594ed81d874461961cd0faa76
+  subpackages:
+  - spew
+- name: github.com/go-kit/kit
+  version: ca4112baa34cb55091301bdc13b1420a122b1b9e
+  subpackages:
+  - log
+  - log/level
+  - log/term
+- name: github.com/go-logfmt/logfmt
+  version: 390ab7935ee28ec6b286364bba9b4dd6410cb3d5
+- name: github.com/go-stack/stack
+  version: 259ab82a6cad3992b4e21ff5cac294ccb06474bc
+- name: github.com/gogo/protobuf
+  version: 1adfc126b41513cc696b209667c8656ea7aac67c
+  subpackages:
+  - gogoproto
+  - jsonpb
+  - proto
+  - protoc-gen-gogo/descriptor
+  - sortkeys
+  - types
+- name: github.com/golang/protobuf
+  version: 3a3da3a4e26776cc22a79ef46d5d58477532dede
+  subpackages:
+  - proto
+  - ptypes
+  - ptypes/any
+  - ptypes/duration
+  - ptypes/timestamp
+- name: github.com/gxed/hashland
+  version: d9f6b97f8db22dd1e090fd0bbbe98f09cc7dd0a8
+  subpackages:
+  - keccakpg
+- name: github.com/ipfs/go-ipfs-api
+  version: 4e18c90494642212ec8f4a64e9328e6a4306a204
+- name: github.com/ipfs/go-ipfs-cmdkit
+  version: c2103d7ae7f889e7329673cc3ba55df8b3863b0f
+  subpackages:
+  - files
+- name: github.com/ipfs/go-log
+  version: b9df188d0fae32d69c1a519fa81741668a12f55a
+  subpackages:
+  - tracer
+  - tracer/wire
+  - writer
+- name: github.com/kr/logfmt
+  version: b84e30acd515aadc4b783ad4ff83aff3299bdfe0
+- name: github.com/libp2p/go-libp2p-crypto
+  version: 18915b5467c77ad8c07a35328c2cab468667a4e8
+  subpackages:
+  - pb
+- name: github.com/libp2p/go-libp2p-peer
+  version: aa0e03e559bde9d4749ad8e38595e15a6fe808fa
+- name: github.com/libp2p/go-libp2p-pubsub
+  version: a031ab4d1b8142714eec946acb7033abafade3d7
+  subpackages:
+  - pb
+- name: github.com/mattn/go-colorable
+  version: efa589957cd060542a26d2dd7832fd6a6c6c3ade
+- name: github.com/mattn/go-isatty
+  version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
+- name: github.com/minio/blake2b-simd
+  version: 3f5f724cb5b182a5c278d6d3d55b40e7f8c2efb4
+- name: github.com/minio/sha256-simd
+  version: ad98a36ba0da87206e3378c556abbfeaeaa98668
+- name: github.com/mitchellh/go-homedir
+  version: 3864e76763d94a6df2f9960b16a20a33da9f9a66
+- name: github.com/mr-tron/base58
+  version: c1bdf7c52f59d6685ca597b9955a443ff95eeee6
+  subpackages:
+  - base58
+- name: github.com/multiformats/go-multiaddr
+  version: 123a717755e0559ec8fda308019cd24e0a37bb07
+- name: github.com/multiformats/go-multiaddr-net
+  version: 97d80565f68c5df715e6ba59c2f6a03d1fc33aaf
+- name: github.com/multiformats/go-multihash
+  version: c5fd85e75c6c9888b604e8f94459631bc626dc07
+- name: github.com/opentracing/opentracing-go
+  version: 6c572c00d1830223701e155de97408483dfcd14a
+  subpackages:
+  - ext
+  - log
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/satori/go.uuid
+  version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
+- name: github.com/spaolacci/murmur3
+  version: f09979ecbc725b9e6d41a297405f65e7e8804acc
+- name: github.com/tendermint/abci
+  version: 9af8b7a7c87478869f8c280ed9539470b8f470b4
+  subpackages:
+  - client
+  - types
+- name: github.com/tendermint/ed25519
+  version: d8387025d2b9d158cf4efb07e7ebf814bcce2057
+  subpackages:
+  - edwards25519
+  - extra25519
+- name: github.com/tendermint/go-amino
+  version: ecf42f8907e063f630fcce7605c61252db93c355
+- name: github.com/tendermint/go-crypto
+  version: e1ce3ffe0fd100816e597d842ee6e476dd320b9c
+- name: github.com/tendermint/tmlibs
+  version: d970af87248a4e162590300dbb74e102183a417d
+  subpackages:
+  - common
+  - log
+- name: github.com/urfave/cli
+  version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
+- name: github.com/whyrusleeping/go-logging
+  version: 0457bb6b88fc1973573aaf6b5145d8d3ae972390
+- name: github.com/whyrusleeping/tar-utils
+  version: 8c6c8ba81d5c71fd69c0f48dbde4b2fb422b6dfc
+- name: golang.org/x/crypto
+  version: ab813273cd59e1333f7ae7bff5d027d4aadf528c
+  subpackages:
+  - blake2s
+  - nacl/secretbox
+  - openpgp/armor
+  - openpgp/errors
+  - poly1305
+  - ripemd160
+  - salsa20/salsa
+  - sha3
+- name: golang.org/x/net
+  version: 1e491301e022f8f977054da4c2d852decd59571f
+  subpackages:
+  - context
+  - http/httpguts
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - trace
+- name: golang.org/x/sys
+  version: c11f84a56e43e20a78cee75a7c034031ecf57d1f
+  subpackages:
+  - cpu
+  - unix
+  - windows
+- name: golang.org/x/text
+  version: 5c1cf69b5978e5a34c5f9ba09a83e56acc4b7877
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: 694d95ba50e67b2e363f3483057db5d4910c18f9
+  subpackages:
+  - googleapis/rpc/status
+- name: google.golang.org/grpc
+  version: 590da37e2dfb4705d8ebd9574ce4cb75295d9674
+  subpackages:
+  - balancer
+  - balancer/base
+  - balancer/roundrobin
+  - channelz
+  - codes
+  - connectivity
+  - credentials
+  - encoding
+  - encoding/proto
+  - grpclb/grpc_lb_v1/messages
+  - grpclog
+  - internal
+  - internal/grpcrand
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - resolver
+  - resolver/dns
+  - resolver/passthrough
+  - stats
+  - status
+  - tap
+  - transport
+testImports:
+- name: github.com/mragiadakos/planetary-blockchain
+  version: 11d7dd2c88a1eeff8d0d1670365eb520dcd7835d
+  subpackages:
+  - server/conf
+- name: github.com/pmezard/go-difflib
+  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  subpackages:
+  - difflib
+- name: github.com/stretchr/testify
+  version: 12b6f73e6084dad08a7c6e575284b177ecafbc71
+  subpackages:
+  - assert

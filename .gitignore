@@ -1,5 +1,7 @@
 server/vendor/*
+server/*.json
 server/server
 
 client/client
+client/*.json
 client/vendor/*

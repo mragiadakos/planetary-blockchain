@@ -13,6 +13,7 @@ import (
 
 type JsonKey struct {
 	PrivateKey string
+	PublicKey  string
 	PublicAddr string
 }
 
@@ -35,12 +36,14 @@ var GenerateKey = cli.Command{
 		privHex := hex.EncodeToString(edKey.Bytes())
 		jk := JsonKey{}
 		jk.PrivateKey = privHex
+		jk.PublicKey = hex.EncodeToString(edKey.PubKey().Bytes())
 		jk.PublicAddr = edKey.PubKey().Address().String()
 		b, _ := json.Marshal(jk)
 		err := ioutil.WriteFile(filename, b, 0644)
 		if err != nil {
 			return errors.New("Error: " + err.Error())
 		}
+		fmt.Println("Created successfully the key.")
 		return nil
 	},
 }
@@ -73,7 +76,7 @@ var Add = cli.Command{
 				"When the type is file, it expects a file",
 		},
 	},
-	Usage: "add a key to the blockchain",
+	Usage: "add a hash to the blockchain",
 	Action: func(c *cli.Context) error {
 		key := c.String("key")
 		if len(key) == 0 {
@@ -110,7 +113,7 @@ var Add = cli.Command{
 		if err != nil {
 			return errors.New("Error: the transaction failed: " + err.Error())
 		}
-		fmt.Println("successfully added the " + hash)
+		fmt.Println("Successfully added the hash " + hash)
 		return nil
 	},
 }
@@ -125,10 +128,10 @@ var Remove = cli.Command{
 		},
 		cli.StringFlag{
 			Name:  "hash",
-			Usage: "the file of the hash",
+			Usage: "the hash of the file",
 		},
 	},
-	Usage: "remove a key to the blockchain",
+	Usage: "remove a hash from the blockchain",
 	Action: func(c *cli.Context) error {
 		key := c.String("key")
 		if len(key) == 0 {
@@ -149,9 +152,59 @@ var Remove = cli.Command{
 		if err != nil {
 			return errors.New("Error: the transaction failed: " + err.Error())
 		}
-		fmt.Println("successfully removed the " + hash)
-		return nil
+		fmt.Println("Successfully removed the hash " + hash)
 
+		return nil
+	},
+}
+
+var Send = cli.Command{
+	Name:    "send",
+	Aliases: []string{"s"},
+	Flags: []cli.Flag{
+		cli.StringFlag{
+			Name:  "key",
+			Usage: "the filename that contains the key in json file",
+		},
+		cli.StringFlag{
+			Name:  "receiver",
+			Usage: "the public key of the receiver",
+		},
+		cli.StringFlag{
+			Name:  "hash",
+			Usage: "the hash of the file",
+		},
+	},
+	Usage: "send a hash to another person",
+	Action: func(c *cli.Context) error {
+		key := c.String("key")
+		if len(key) == 0 {
+			return errors.New("Error: the key is missing")
+		}
+
+		hash := c.String("hash")
+		if len(hash) == 0 {
+			return errors.New("Error: the hash is empty")
+		}
+
+		receiver := c.String("receiver")
+		if len(hash) == 0 {
+			return errors.New("Error: the receiver is empty")
+		}
+
+		edKey, err := fileKey(key)
+		if err != nil {
+			return err
+		}
+		b, err := hex.DecodeString(receiver)
+		if err != nil {
+			return err
+		}
+		_, err = SendRequest(*edKey, b, []string{hash})
+		if err != nil {
+			return errors.New("Error: the transaction failed: " + err.Error())
+		}
+		fmt.Println("Successfully send the hash " + hash + " to " + receiver)
 		return nil
 	},
 }

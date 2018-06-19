@@ -63,7 +63,7 @@ func (pba *PBApplication) sendActionValidation(dr DeliveryRequest) (uint32, erro
 	for _, v := range dr.Data.Files {
 		user := pba.state.db.Get(prefixFileKey(v))
 		if string(user) != fromAddr {
-			return CodeTypeUnauthorized, errors.New("The hash " + v + " already exists.")
+			return CodeTypeUnauthorized, errors.New("You dont own The hash " + v + ".")
 		}
 	}
 

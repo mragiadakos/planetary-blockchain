@@ -9,42 +9,12 @@ import (
 	"time"
 
 	shell "github.com/ipfs/go-ipfs-api"
-	abcicli "github.com/tendermint/abci/client"
-	"github.com/tendermint/abci/types"
 	crypto "github.com/tendermint/go-crypto"
 )
 
-func deliver(b []byte) (uint32, error) {
-	client := abcicli.NewSocketClient(Conf.AbciDaemon, false)
-	defer func() {
-		client.Stop()
-	}()
-	err := client.Start()
-	if err != nil {
-		return CodeTypeClientError, err
-	}
-	resp, err := client.DeliverTxSync(b)
-	if err != nil {
-		return CodeTypeClientError, err
-	}
-	if resp.Code > CodeTypeOK {
-		return resp.Code, errors.New(resp.Log)
-	}
-	return CodeTypeOK, nil
-}
-
 func query(b []byte) (*QueryResponse, uint32, error) {
-	client := abcicli.NewSocketClient(Conf.AbciDaemon, false)
-	defer func() {
-		client.Stop()
-	}()
-	err := client.Start()
-	if err != nil {
-		return nil, CodeTypeClientError, err
-	}
-	req := types.RequestQuery{}
-	req.Data = b
-	resp, err := client.QuerySync(req)
+
+	resp, err := RpcQuery(b)
 	if err != nil {
 		return nil, CodeTypeClientError, err
 	}
@@ -86,8 +56,7 @@ func AddRequest(from crypto.PrivKeyEd25519, fileHashes []string) (uint32, error)
 	dr.Signature = from.Sign(b).Bytes()
 	dr.Data = dd
 	b, _ = json.Marshal(dr)
-	return deliver(b)
-
+	return RpcBroadcastCommit(b)
 }
 
 func RemoveRequest(from crypto.PrivKeyEd25519, fileHashes []string) (uint32, error) {
@@ -100,7 +69,7 @@ func RemoveRequest(from crypto.PrivKeyEd25519, fileHashes []string) (uint32, err
 	dr.Signature = from.Sign(b).Bytes()
 	dr.Data = dd
 	b, _ = json.Marshal(dr)
-	return deliver(b)
+	return RpcBroadcastCommit(b)
 }
 
 func SendRequest(from crypto.PrivKeyEd25519, toPublicKey []byte, fileHashes []string) (uint32, error) {
@@ -114,7 +83,7 @@ func SendRequest(from crypto.PrivKeyEd25519, toPublicKey []byte, fileHashes []st
 	dr.Signature = from.Sign(b).Bytes()
 	dr.Data = dd
 	b, _ = json.Marshal(dr)
-	return deliver(b)
+	return RpcBroadcastCommit(b)
 }
 
 func SpbQueryRequest(from crypto.PrivKeyEd25519, file, userAddr *string) (*QueryResponse, uint32, error) {

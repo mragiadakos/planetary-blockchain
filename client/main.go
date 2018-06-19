@@ -13,6 +13,7 @@ func main() {
 		GenerateKey,
 		Add,
 		Remove,
+		Send,
 		Query,
 	}
 	err := app.Run(os.Args)

@@ -3,13 +3,8 @@ package ctrls
 import (
 	"encoding/binary"
 
-	"github.com/tendermint/abci/example/code"
 	"github.com/tendermint/abci/types"
 )
-
-func (pba *PBApplication) CheckTx(tx []byte) types.ResponseCheckTx {
-	return types.ResponseCheckTx{Code: code.CodeTypeOK}
-}
 
 func (pba *PBApplication) Commit() types.ResponseCommit {
 	// Using a memdb - just return the big endian size of the db

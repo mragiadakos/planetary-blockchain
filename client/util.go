@@ -14,16 +14,13 @@ import (
 
 func query(b []byte) (*QueryResponse, uint32, error) {
 
-	resp, err := RpcQuery(b)
+	resp, status, err := RpcQuery(b)
 	if err != nil {
-		return nil, CodeTypeClientError, err
+		return nil, status, err
 	}
 
-	if resp.Code > CodeTypeOK {
-		return nil, resp.Code, errors.New(resp.Log)
-	}
 	qresp := QueryResponse{}
-	json.Unmarshal(resp.Value, &qresp)
+	json.Unmarshal(resp, &qresp)
 	return &qresp, CodeTypeOK, nil
 }
 

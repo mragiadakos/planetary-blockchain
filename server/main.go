@@ -18,7 +18,7 @@ func main() {
 	logger := tmlog.NewTMLogger(kitlog.NewSyncWriter(os.Stdout))
 	flagAbci := "socket"
 	ipfsDaemon := flag.String("ipfs", "127.0.0.1:5001", "the URL for the IPFS's daemon")
-	node := flag.String("node", "tcp://0.0.0.0:46658", "the TCP URL for the ABCI daemon")
+	node := flag.String("node", "tcp://127.0.0.1:26658", "the TCP URL for the ABCI daemon")
 	ipfsAuthorizedUserHash := flag.String("auth", "", "the IPFS hash with the JSON list of public key addresses")
 	waitSec := flag.Int("wait", 5, "the seconds for an acceptable query")
 	blockchainType := flag.String("type", "spb", "the blockchain types are allowed SPB as 'spb' and OtoOPB as 'otoopb'")

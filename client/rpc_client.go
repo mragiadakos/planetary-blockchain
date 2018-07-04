@@ -1,69 +1,11 @@
 package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/hex"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"net/http"
 
-	"github.com/tendermint/abci/types"
+	client "github.com/tendermint/tendermint/rpc/client"
+	"github.com/tendermint/tendermint/types"
 )
-
-type jsonRpcRequest struct {
-	Method  string      `json:"method"`  //"method": "broadcast_tx_sync",
-	Version string      `json:"jsonrpc"` //"jsonrpc": "2.0",
-	Params  interface{} `json:"params"`  //"params": ,
-	Id      string      `json:"id"`      //"id": "dontcare"
-}
-
-type jsonRpcResponseForDelivery struct {
-	Method  string       `json:"method"`  //"method": "broadcast_tx_sync",
-	Version string       `json:"jsonrpc"` //"jsonrpc": "2.0",
-	Result  deliveryTx   `json:"result"`  //"result": ,
-	Id      string       `json:"id"`      //"id": "dontcare"
-	Error   *errorStatus `json:"error"`
-}
-
-type deliveryTx struct {
-	CheckTx    types.ResponseCheckTx   `json:"check_tx"`
-	DeliveryTx types.ResponseDeliverTx `json:"deliver_tx"`
-	Height     int                     `json:"height"`
-	Hash       string                  `json:"hash"`
-}
-
-type errorStatus struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Data    string `json:"data"`
-}
-
-type jsonRpcResponseForQuery struct {
-	Method  string        `json:"method"`  //"method": "broadcast_tx_sync",
-	Version string        `json:"jsonrpc"` //"jsonrpc": "2.0",
-	Result  responseQuery `json:"result"`  //"result": ,
-	Id      string        `json:"id"`      //"id": "dontcare"
-	Error   *errorStatus  `json:"error"`
-}
-
-type responseQuery struct {
-	Response types.ResponseQuery `json:"response"`
-}
-
-func newJsonRpcRequest(method string, js interface{}) jsonRpcRequest {
-	jr := jsonRpcRequest{}
-	jr.Method = method
-	jr.Id = "dontcare"
-	jr.Params = js
-	jr.Version = "2.0"
-	return jr
-}
-
-type Tx struct {
-	Tx string `json:"tx"`
-}
 
 type AbciQuery struct {
 	Data string `json:"data"`
@@ -71,41 +13,31 @@ type AbciQuery struct {
 }
 
 func RpcBroadcastCommit(deliveryB []byte) (uint32, error) {
-	tx := Tx{}
-	tx.Tx = base64.StdEncoding.EncodeToString(deliveryB)
-	jr := newJsonRpcRequest("broadcast_tx_commit", tx)
-	bout, _ := json.Marshal(jr)
-	resp, err := http.Post(Conf.AbciDaemon, "text/plain", bytes.NewBuffer(bout))
+	cli := client.NewHTTP(Conf.AbciDaemon, "/websocket")
+	btc, err := cli.BroadcastTxCommit(types.Tx(deliveryB))
 	if err != nil {
 		return CodeTypeClientError, err
 	}
-	bresp, _ := ioutil.ReadAll(resp.Body)
-	jresp := jsonRpcResponseForDelivery{}
-	json.Unmarshal(bresp, &jresp)
-	if jresp.Error != nil {
-		return CodeTypeClientError, errors.New(jresp.Error.Message + ": " + jresp.Error.Data)
-	}
-	if jresp.Result.CheckTx.Code > CodeTypeOK {
-		return jresp.Result.CheckTx.Code, errors.New(jresp.Result.CheckTx.Log)
+
+	if btc.CheckTx.Code > CodeTypeOK {
+		return btc.CheckTx.Code, errors.New(btc.CheckTx.Log)
 	}
 
-	if jresp.Result.DeliveryTx.Code > CodeTypeOK || jresp.Result.DeliveryTx.Code < 0 {
-		return jresp.Result.DeliveryTx.Code, errors.New(jresp.Result.DeliveryTx.Log)
+	if btc.DeliverTx.Code > CodeTypeOK || btc.DeliverTx.Code < 0 {
+		return btc.DeliverTx.Code, errors.New(btc.DeliverTx.Log)
 	}
 	return CodeTypeOK, nil
 }
 
-func RpcQuery(b []byte) (*types.ResponseQuery, error) {
-	aq := AbciQuery{}
-	aq.Data = hex.EncodeToString(b)
-	jr := newJsonRpcRequest("abci_query", aq)
-	bout, _ := json.Marshal(jr)
-	resp, err := http.Post(Conf.AbciDaemon, "text/plain", bytes.NewBuffer(bout))
+func RpcQuery(b []byte) ([]byte, uint32, error) {
+	cli := client.NewHTTP(Conf.AbciDaemon, "/websocket")
+	q, err := cli.ABCIQuery("", b)
 	if err != nil {
-		return nil, err
+		return nil, CodeTypeClientError, err
 	}
-	bresp, _ := ioutil.ReadAll(resp.Body)
-	jresp := jsonRpcResponseForQuery{}
-	json.Unmarshal(bresp, &jresp)
-	return &jresp.Result.Response, nil
+	if q.Response.Code > CodeTypeOK {
+		return nil, q.Response.Code, errors.New(q.Response.Log)
+	}
+
+	return q.Response.Value, q.Response.Code, nil
 }
